@@ -1,10 +1,9 @@
 const Lame = require('lame');
+const Gain = require('audio-gain');
 const Speaker = require('speaker');
-//const {getAudioDurationInSeconds} = require('get-audio-duration')
 const mp3Duration = require('mp3-duration');
 const fs = require('fs');
 const path = require('path');
-const mpg123Util = require('node-mpg123-util');
 var events = {};
 
 var soundDuration = 0;
@@ -15,6 +14,7 @@ var intStart = true;
 var volume = 1;
 
 var decoder;
+var gain;
 var speaker;
 
 function stop() {
@@ -33,7 +33,9 @@ function play(sound){
             soundDuration = duration * 1000;
             try{
                 fs.createReadStream(soundPath)
-                .pipe(decoder).pipe(speaker);
+                .pipe(decoder)
+                .pipe(gain)
+                .pipe(speaker);
                 
             } catch (e) {
                 console.log(e);
@@ -71,6 +73,7 @@ function on(event, callback) {
 
 function setVolume(v){
     volume = v;
+    // console.log('Audio Volume: '+v);
 }
 
 function createSpeaker() {
@@ -82,16 +85,13 @@ function createSpeaker() {
         outSampleRate: 22050,
         mode: Lame.STEREO
     });
+    gain = Gain(volume);
     speaker = new Speaker({
         channels: 2,          // 2 channels
         bitDepth: 16,         // 16-bit samples
         sampleRate: 44100     // 44,100 Hz sample rate
     });
-    decoder.on('format', () => {
-        mpg123Util.setVolume(decoder.mh, volume);
-        let vol = mpg123Util.getVolume(decoder.mh);
-        console.log(vol);
-    })
+    
     speaker.on('open', () => {
         startTime = new Date().getTime();
         startInterval();

@@ -1,0 +1,26 @@
+<div class="container padding-top">
+    <div class="jumbotron">
+        <span class="playing" [ngStyle]="{'width': progress + '%'}"></span>
+        <div class="content">
+            <h1>{{ playing ? playing.name : 'Play a sound' }}</h1>
+            <p class="played" *ngIf="playing?.id">Times Played: <span>{{playing.played}}</span></p>
+        </div>
+        <input type="range" min="0" max="1" step="0.01" (input)="onVolume()" [(ngModel)]="volume">
+    </div>
+</div>
+<div for="sound_input" class="container-fluid" (dragover)="onDragover($event)" (dragend)="onDragend($event)" (dragexit)="onDragend($event)" (drop)="onDrop($event)">
+    <span class="drag" [class.showing]="dragging"></span>
+
+    <!-- list buttons here -->
+    <div class="buttons">
+        <span class="sound-button" *ngFor="let sound of sounds">
+            <a (click)="onDelete(sound.id)" class="delete">X</a>
+            <a (click)="onPlay(sound.id)" class="play">
+                <span class="circle"></span>
+            </a>
+            <h5>{{sound.name}}</h5>
+        </span>
+    </div>
+</div>
+
+  

@@ -36,7 +36,7 @@ app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname, 'www/index.html'));
 });
 
-//bonjour.publish({ name: 'Sound Board', host: 'soundboard.local', type: 'rfb', port: app.get('port') })
+bonjour.publish({ name: 'Sound Board', host: 'soundboard.local', type: 'rfb', port: app.get('port') })
 // const browser = bonjour.find(
 // 	{}, 
 // 	(service)=>{if((['soundboard.local']).indexOf(service.host) >= 0) console.log(service);});

@@ -34,7 +34,7 @@ function play(sound){
             try{
                 fs.createReadStream(soundPath)
                 .pipe(decoder)
-                .pipe(gain)
+                //.pipe(gain)
                 .pipe(speaker);
                 
             } catch (e) {

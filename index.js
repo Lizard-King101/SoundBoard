@@ -36,7 +36,7 @@ app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname, 'www/index.html'));
 });
 
-bonjour.publish({ name: 'Sound Board', host: 'soundboard.local', type: 'rfb', port: app.get('port') })
+//bonjour.publish({ name: 'Sound Board', host: 'soundboard.local', type: 'rfb', port: app.get('port') })
 // const browser = bonjour.find(
 // 	{}, 
 // 	(service)=>{if((['soundboard.local']).indexOf(service.host) >= 0) console.log(service);});
@@ -105,9 +105,11 @@ app.post('*', (req, res) => {
 
 io.on('connection', function (socket) {
 	console.log('user connected');
+	socket.emit('volume', {id: 'nobody', volume});
 
 	socket.on('volume-set', (data)=>{
 		volume = data.volume;
+		audio.setVolume(data.volume);
 		let tmp = {
 			id: socket.id,
 			volume: volume

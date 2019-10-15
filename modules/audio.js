@@ -4,7 +4,7 @@ const Speaker = require('speaker');
 const mp3Duration = require('mp3-duration');
 const fs = require('fs');
 const path = require('path');
-//const mpg123Util = require('node-mpg123-util');
+const mpg123Util = require('node-mpg123-util');
 var events = {};
 
 var soundDuration = 0;
@@ -26,12 +26,10 @@ function stop() {
 function play(sound){
     if(sound && !playing) {
         createSpeaker();
-        // setVolume(volume);
         playing = sound.id;
         let soundPath = path.join(__dirname, '../', sound.path);
         console.log(sound)
         mp3Duration(soundPath, (err, duration) => {
-	//getAudioDurationInSeconds(soundPath).then((duration) => {
             soundDuration = duration * 1000;
             try{
                 fs.createReadStream(soundPath)
@@ -72,10 +70,7 @@ function on(event, callback) {
 }
 
 function setVolume(v){
-    // volume = v;
-    // mpg123Util.setVolume(decoder.mh, v);
-    // let vol = mpg123Util.getVolume(decoder.mh);
-    // console.log(vol);
+    volume = v;
 }
 
 function createSpeaker() {
@@ -92,7 +87,11 @@ function createSpeaker() {
         bitDepth: 16,         // 16-bit samples
         sampleRate: 44100     // 44,100 Hz sample rate
     });
-
+    decoder.on('format', () => {
+        mpg123Util.setVolume(decoder.mh, volume);
+        let vol = mpg123Util.getVolume(decoder.mh);
+        console.log(vol);
+    })
     speaker.on('open', () => {
         startTime = new Date().getTime();
         startInterval();

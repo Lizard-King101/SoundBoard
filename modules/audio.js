@@ -1,6 +1,7 @@
 const Lame = require('lame');
 const Speaker = require('speaker');
-const {getAudioDurationInSeconds} = require('get-audio-duration')
+//const {getAudioDurationInSeconds} = require('get-audio-duration')
+const mp3Duration = require('mp3-duration');
 const fs = require('fs');
 const path = require('path');
 //const mpg123Util = require('node-mpg123-util');
@@ -29,7 +30,8 @@ function play(sound){
         playing = sound.id;
         let soundPath = path.join(__dirname, '../', sound.path);
         console.log(sound)
-        getAudioDurationInSeconds(soundPath).then((duration) => {
+        mp3Duration(soundPath, (err, duration) => {
+	//getAudioDurationInSeconds(soundPath).then((duration) => {
             soundDuration = duration * 1000;
             try{
                 fs.createReadStream(soundPath)

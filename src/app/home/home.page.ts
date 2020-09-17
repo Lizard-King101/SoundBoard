@@ -112,7 +112,7 @@ export class HomeComponent{
         let files = dt.files;
         if(files.length < 2) {
             let file = files[0];
-            if((['audio/x-wav', 'audio/mpeg']).indexOf(file.type) >= 0) {
+            if((['audio/mpeg']).indexOf(file.type) >= 0) {
                 let formdata = new FormData();
                 formdata.append('sound', file);
 

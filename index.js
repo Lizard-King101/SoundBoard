@@ -36,7 +36,7 @@ app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname, 'www/index.html'));
 });
 
-bonjour.publish({ name: 'Sound Board', host: 'soundboard.local', type: 'rfb', port: app.get('port') })
+if(!app.get('port')) bonjour.publish({ name: 'Sound Board', host: 'soundboard.local', type: 'rfb', port: app.get('port') })
 // const browser = bonjour.find(
 // 	{}, 
 // 	(service)=>{if((['soundboard.local']).indexOf(service.host) >= 0) console.log(service);});
@@ -150,6 +150,10 @@ function saveJson(sounds) {
 function loadJson() {
 	return new Promise((res) => {
 		fs.readFile(path.join(__dirname, 'sounds/sounds.json') , {encoding: 'utf8'}, (err, data) => {
+			if(err){
+				saveJson(JSON.stringify({}));
+				res({});
+			}
 			res(data ? JSON.parse(data) : null);
 		})
 	})
